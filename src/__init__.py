@@ -36,4 +36,4 @@ class CustomActor(CBPiActor):
 
 def setup(cbpi):
     print("###### SETUP PLUGIN #####")
-    
+    cbpi.plugin.register("MyCustomActor", CustomActor)
