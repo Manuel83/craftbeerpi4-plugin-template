@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(name='{{ name }}',
-      version='0.0.2',
-      description='{{ description }}',
-      author='{{ author }}'',
-      author_email='{{ email }}'',
-      url='{{ website }}'',
+      version='0.0.1',
+      description='CraftBeerPi Plugin',
+      author='',
+      author_email='',
+      url='',
       include_package_data=True,
       package_data={
         # If any package contains *.txt or *.rst files, include them:
