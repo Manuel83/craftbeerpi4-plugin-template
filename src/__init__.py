@@ -1,5 +1,5 @@
 import os
-
+from aiohttp import web
 import logging
 from unittest.mock import MagicMock, patch
 
@@ -7,12 +7,46 @@ from cbpi.api import *
 
 logger = logging.getLogger(__name__)
 
+
+class CustomWebExtension(CBPiExtension):
+
+    @request_mapping(path="/", auth_required=False)
+    async def hello_world(self, request):
+        return web.Response(text="Hello from Plugin)
+
+    def __init__(self, cbpi):
+        self.cbpi = cbpi
+        path = os.path.dirname(__file__)
+        self.cbpi.register(self, "/cbpi_uiplugin", static=os.path.join(path, "static"))
+
+
+@parameters([])
+class CustomSensor(CBPiSensor):
+    
+    def __init__(self, cbpi, id, props):
+        super(CustomSensor, self).__init__(cbpi, id, props)
+        self.value = 0
+
+    @action(key="Test", parameters=[])
+    async def action1(self, **kwargs):
+        print("ACTION!", kwargs)
+
+    async def run(self):
+        while self.running is True:
+            self.value = random.randint(0,50)
+            self.push_update(self.value)
+            await asyncio.sleep(10)
+    
+    def get_state(self):
+        return dict(value=self.value)
+
+
 @parameters([])
 class CustomActor(CBPiActor):
 
     @action("action", parameters={})
     async def action(self, **kwargs):
-        print("ACTION!", kwargs)
+        print("Action Triggered", kwargs)
         pass
     
     def init(self):
@@ -35,5 +69,6 @@ class CustomActor(CBPiActor):
 
 
 def setup(cbpi):
-    print("###### SETUP PLUGIN #####")
     cbpi.plugin.register("MyCustomActor", CustomActor)
+    cbpi.plugin.register("CustomSensor", CustomSensor)
+    cbpi.plugin.register("CustomWebExtension", CustomWebExtension)
