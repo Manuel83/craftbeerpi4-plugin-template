@@ -1,8 +1,11 @@
+
+# -*- coding: utf-8 -*-
 import os
 from aiohttp import web
 import logging
 from unittest.mock import MagicMock, patch
-
+import asyncio
+import random
 from cbpi.api import *
 
 logger = logging.getLogger(__name__)
@@ -12,7 +15,7 @@ class CustomWebExtension(CBPiExtension):
 
     @request_mapping(path="/", auth_required=False)
     async def hello_world(self, request):
-        return web.Response(text="Hello from Plugin)
+        return web.Response(text="Hello from Plugin")
 
     def __init__(self, cbpi):
         self.cbpi = cbpi
@@ -35,11 +38,10 @@ class CustomSensor(CBPiSensor):
         while self.running is True:
             self.value = random.randint(0,50)
             self.push_update(self.value)
-            await asyncio.sleep(10)
+            await asyncio.sleep(1)
     
     def get_state(self):
         return dict(value=self.value)
-
 
 @parameters([])
 class CustomActor(CBPiActor):
@@ -69,6 +71,7 @@ class CustomActor(CBPiActor):
 
 
 def setup(cbpi):
-    cbpi.plugin.register("MyCustomActor", CustomActor)
-    cbpi.plugin.register("CustomSensor", CustomSensor)
-    cbpi.plugin.register("CustomWebExtension", CustomWebExtension)
+    #cbpi.plugin.register("MyCustomActor", CustomActor)
+    #cbpi.plugin.register("MyCustomSensor", CustomSensor)
+    #cbpi.plugin.register("MyustomWebExtension", CustomWebExtension)
+    pass
