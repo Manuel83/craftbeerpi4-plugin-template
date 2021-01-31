@@ -15,7 +15,7 @@ class CustomWebExtension(CBPiExtension):
 
     @request_mapping(path="/", auth_required=False)
     async def hello_world(self, request):
-        return web.Response(text="Hello from Plugin")
+        return web.HTTPFound('static/index.html')
 
     def __init__(self, cbpi):
         self.cbpi = cbpi
