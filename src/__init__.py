@@ -51,7 +51,7 @@ class CustomActor(CBPiActor):
         print("Action Triggered", kwargs)
         pass
     
-    def init(self):
+    def on_start(self):
         self.state = False
         pass
 
